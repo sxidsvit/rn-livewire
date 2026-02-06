@@ -1,130 +1,379 @@
-rn-livewire 💬
+# rn-livewire
 
-rn-livewire is a production-ready full-stack monorepo designed for real-time communication. It features a unified high-performance backend serving both Web (React) and Mobile (React Native/Expo) clients through a seamless integration of REST APIs and WebSockets.
+A full-stack, real-time chat application with seamless cross-platform support. Connect instantly on mobile (iOS/Android) or web with end-to-end message synchronization and live user presence tracking.
 
-🚀 Key Features
+## Table of Contents
 
-Real-time Messaging: Instant message delivery powered by Socket.io.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [Backend Setup](#backend-setup)
+  - [Mobile Setup](#mobile-setup)
+  - [Web Setup](#web-setup)
+- [Configuration](#configuration)
+- [Running Locally](#running-locally)
+- [Development](#development)
+- [Architecture](#architecture)
+- [Contributing](#contributing)
+- [Support](#support)
+- [License](#license)
 
-Cross-platform Ecosystem: Shared backend infrastructure for iOS, Android, and Web.
+## Features
 
-Enterprise-grade Auth: Secure user management and session handling via Clerk.
+✨ **Real-time Messaging** - WebSocket-powered instant message delivery with live status updates
 
-Interactive UI: Live typing indicators and real-time user presence (Online/Offline status).
+📱 **Multi-Platform** - Native mobile apps (iOS/Android) and responsive web interface from a single codebase
 
-High Performance: Backend powered by Bun, the fast JavaScript all-in-one toolkit.
+🔐 **Secure Authentication** - Clerk integration for passwordless authentication and session management
 
-Robust Monitoring: Integrated Sentry support for real-time error tracking and performance profiling.
+👥 **Online Presence** - See who's online in real-time with instant status updates when users connect/disconnect
 
-🛠 Tech Stack
+💬 **Chat Management** - Create conversations, track message history, and manage participants
 
-Core Backend
+🎨 **Modern UI** - Beautiful interfaces with NativeWind (mobile) and Tailwind CSS (web)
 
-Runtime: Bun (High-performance JS runtime)
+📊 **Error Tracking** - Sentry integration for production monitoring and debugging
 
-Framework: Express with TypeScript
+🚀 **Developer Friendly** - TypeScript throughout, hot reload support, clear architecture separation
 
-Database: MongoDB using Mongoose ODM
+## Tech Stack
 
-Real-time: Socket.io for bi-directional communication
+### Backend
 
-Security: Clerk SDK for JWT verification and route protection
+- **Runtime**: [Bun](https://bun.com) - Fast all-in-one JavaScript runtime
+- **Framework**: Express.js 5.2
+- **Database**: MongoDB with Mongoose ODM
+- **Real-time**: Socket.io 4.8
+- **Authentication**: Clerk Express
+- **Error Tracking**: Sentry
 
-Client Applications
+### Mobile
 
-Web: React 18, Vite, and TailwindCSS
+- **Framework**: React Native 0.81 with Expo
+- **Routing**: Expo Router
+- **State Management**: Zustand, React Query
+- **Styling**: NativeWind (Tailwind CSS for React Native)
+- **Authentication**: Clerk for React Native
+- **UI Components**: Expo Vector Icons
 
-Mobile: React Native via Expo (managed workflow)
+### Web
 
-State Management: React Hooks & Context API
+- **Framework**: React 19 with Vite
+- **Styling**: Tailwind CSS 4.1 with DaisyUI
+- **Routing**: React Router 7.12
+- **State Management**: Zustand, React Query
+- **Authentication**: Clerk for React
+- **Icons**: Lucide React
 
-📂 Project Structure
+### Cross-platform
 
+- **HTTP Client**: Axios
+- **Real-time Client**: Socket.io Client
+- **Type Safety**: TypeScript
+
+## Project Structure
+
+```
 rn-livewire/
-├── backend/ # Bun + Express + Socket.io Server
-│ ├── src/
-│ │ ├── controllers/ # Business logic & Route handlers
-│ │ ├── models/ # Mongoose schemas (User, Message, Chat)
-│ │ ├── middleware/ # Auth & Error handling layers
-│ │ └── utils/ # Socket.IO & Database configurations
-├── web/ # React.js Web Application
-└── mobile/ # React Native (Expo) Mobile App
+├── backend/                    # Express.js server
+│   ├── src/
+│   │   ├── app.ts             # Express app setup
+│   │   ├── config/            # Database configuration
+│   │   ├── controllers/       # Request handlers
+│   │   ├── middleware/        # Authentication, error handling
+│   │   ├── models/            # Mongoose schemas
+│   │   ├── routes/            # API routes
+│   │   ├── utils/             # Socket.io setup
+│   │   └── scripts/           # Database seeding
+│   └── index.ts               # Server entry point
+│
+├── mobile/                     # React Native + Expo
+│   ├── app/                   # File-based routing
+│   ├── components/            # Reusable components
+│   ├── hooks/                 # Custom React hooks
+│   ├── lib/                   # Utilities (axios, socket)
+│   └── types/                 # TypeScript definitions
+│
+└── web/                        # React + Vite
+    ├── src/
+    │   ├── App.jsx            # Main app component
+    │   ├── components/        # Reusable components
+    │   ├── hooks/             # Custom React hooks
+    │   ├── lib/               # Utilities (axios, socket)
+    │   └── pages/             # Route pages
+    └── index.html
+```
 
-⚡ Quick Start
+## Prerequisites
 
-Prerequisites
+- **Node.js** 18+ or **Bun** 1.3+
+- **npm** or **yarn** or **bun** package manager
+- **MongoDB** instance (local or MongoDB Atlas)
+- **Clerk account** ([create one here](https://clerk.com))
+- **Git**
+- For mobile development: Android Studio/Emulator or Xcode/iOS Simulator (optional for web testing)
 
-Bun (Recommended) or Node.js
+## Installation
 
-MongoDB instance (Local or Atlas)
+### Backend Setup
 
-Clerk account for Authentication API keys
+1. Navigate to the backend directory:
 
-1. Installation
+```bash
+cd backend
+```
 
-Install dependencies for the entire monorepo:
+2. Install dependencies using Bun:
 
+```bash
 bun install
+```
 
-2. Environment Configuration
+3. Create a `.env` file in the backend directory:
 
-Populate the .env files in their respective directories:
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/rn-livewire
+CLERK_SECRET_KEY=your_clerk_secret_key
+FRONTEND_URL=http://localhost:5173
+PORT=3000
+```
 
-backend/.env
+4. Seed the database (optional):
 
-MONGODB_URI: Your MongoDB connection string.
+```bash
+bun src/scripts/seed.ts
+```
 
-CLERK_SECRET_KEY: Your private Clerk key.
+### Mobile Setup
 
-FRONTEND_URL: Your web client URL (e.g., http://localhost:5173).
+1. Navigate to the mobile directory:
 
-web/.env & mobile/.env
+```bash
+cd mobile
+```
 
-VITE_CLERK_PUBLISHABLE_KEY: Your public Clerk key.
+2. Install dependencies:
 
-VITE_API_URL: Backend API endpoint (e.g., http://localhost:3000).
+```bash
+npm install
+```
 
-3. Running the Application
+3. Create an `.env` file in the mobile root:
 
-Component
+```env
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+EXPO_PUBLIC_API_URL=http://localhost:3000
+EXPO_PUBLIC_SOCKET_URL=http://localhost:3000
+```
 
-Command
+4. Start the development server:
 
-Backend
+```bash
+npm start
+```
 
-cd backend && bun run dev
+### Web Setup
 
-Web Client
+1. Navigate to the web directory:
 
-cd web && bun run dev
+```bash
+cd web
+```
 
-Mobile App
+2. Install dependencies:
 
-cd mobile && npx expo start
+```bash
+npm install
+```
 
-📡 Architecture Overview
+3. Create a `.env` file in the web root:
 
-The system implements a Dual Communication Architecture:
+```env
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_API_URL=http://localhost:3000
+VITE_SOCKET_URL=http://localhost:3000
+```
 
-REST API: Handles CRUD operations, such as fetching chat history, user profiles, and initial data loading.
+4. Start the development server:
 
-WebSockets: Manages low-latency interactions, including message broadcasting, typing status, and presence updates.
+```bash
+npm run dev
+```
 
-🏗 Deployment
+## Configuration
 
-The project is Docker-ready. The backend is configured to serve the production build of the web application, allowing you to deploy the entire stack as a single container.
+### Environment Variables
 
-# Build and run using Docker
+#### Backend (`backend/.env`)
 
-docker build -t rn-livewire .
-docker run -p 3000:3000 rn-livewire
+| Variable           | Description                         | Example                 |
+| ------------------ | ----------------------------------- | ----------------------- |
+| `MONGODB_URI`      | MongoDB connection string           | `mongodb+srv://...`     |
+| `CLERK_SECRET_KEY` | Clerk secret key for authentication | From Clerk dashboard    |
+| `FRONTEND_URL`     | Frontend application URL            | `http://localhost:5173` |
+| `PORT`             | Server port                         | `3000`                  |
 
-📖 In-depth Documentation
+#### Mobile (`mobile/.env`)
 
-For detailed technical specifications, API endpoint definitions, and architectural diagrams, visit the DeepWiki.
+| Variable                            | Description           | Example                 |
+| ----------------------------------- | --------------------- | ----------------------- |
+| `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | From Clerk dashboard    |
+| `EXPO_PUBLIC_API_URL`               | Backend API base URL  | `http://localhost:3000` |
+| `EXPO_PUBLIC_SOCKET_URL`            | Socket.io server URL  | `http://localhost:3000` |
 
-📄 License
+#### Web (`web/.env`)
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+| Variable                     | Description           | Example                 |
+| ---------------------------- | --------------------- | ----------------------- |
+| `VITE_CLERK_PUBLISHABLE_KEY` | Clerk publishable key | From Clerk dashboard    |
+| `VITE_API_URL`               | Backend API base URL  | `http://localhost:3000` |
+| `VITE_SOCKET_URL`            | Socket.io server URL  | `http://localhost:3000` |
 
-Developed with ❤️ by sxidsvit
+## Running Locally
+
+### Start All Services
+
+1. **Backend** (Terminal 1):
+
+```bash
+cd backend
+bun run dev
+# Server runs at http://localhost:3000
+```
+
+2. **Web** (Terminal 2):
+
+```bash
+cd web
+npm run dev
+# Web runs at http://localhost:5173
+```
+
+3. **Mobile** (Terminal 3):
+
+```bash
+cd mobile
+npm start
+# Press 'w' for web, 'i' for iOS simulator, 'a' for Android emulator
+```
+
+### Test the Application
+
+1. Open the web app at `http://localhost:5173`
+2. Sign in with your Clerk credentials
+3. Create a new chat or select an existing one
+4. Send a message and see real-time updates
+5. Open mobile app or another web instance to test real-time synchronization
+
+## Development
+
+### Code Structure
+
+- **Backend**: Controllers handle business logic, routes define endpoints, models define MongoDB schemas, socket handlers manage real-time events
+- **Mobile**: Hooks manage state and API calls, components render UI, lib folder contains shared utilities
+- **Web**: Pages contain route components, hooks manage state and API calls, components are reusable UI elements
+
+### Key Endpoints
+
+See [backend/README.md](backend/README.md) for detailed API documentation.
+
+### Socket Events
+
+The application uses Socket.io for real-time communication:
+
+- `connection` - User connects to the server
+- `online-users` - Receive list of currently online users
+- `new-message` - Receive new message from chat
+- `disconnect` - User disconnects from the server
+
+### Adding New Features
+
+1. Create database models in `backend/src/models/`
+2. Add controllers in `backend/src/controllers/`
+3. Define routes in `backend/src/routes/`
+4. Add API hooks in `mobile/hooks/` and `web/src/hooks/`
+5. Create UI components in `mobile/components/` and `web/src/components/`
+
+## Architecture
+
+### Real-time Communication Flow
+
+```
+Mobile/Web Client
+    ↓
+    ├→ HTTP Requests (Axios) → Backend Express Server
+    │                              ↓
+    │                         MongoDB Database
+    │
+    ├→ Socket.io Connection → Backend Socket Server
+    ↓                              ↓
+Listen for events ←─────── Broadcast events to clients
+```
+
+### Authentication Flow
+
+1. User signs up/logs in via Clerk UI
+2. Clerk returns an authentication token
+3. Token is stored securely (mobile: Expo Secure Store, web: localStorage)
+4. Each API request includes the token in headers
+5. Socket.io connection authenticated with token in handshake
+
+## Contributing
+
+We welcome contributions! To contribute:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes: `git commit -m 'Add your feature'`
+4. Push to the branch: `git push origin feature/your-feature`
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Use TypeScript for type safety
+- Follow existing code style and patterns
+- Write meaningful commit messages
+- Test features locally before submitting PRs
+- Keep commits atomic and focused
+
+## Support
+
+### Getting Help
+
+- **Issues**: Report bugs or request features via [GitHub Issues](../../issues)
+- **Documentation**: Check individual README files in each directory
+- **Socket.io Events**: See [backend/src/utils/socket.ts](backend/src/utils/socket.ts)
+- **Clerk Docs**: [Clerk Authentication](https://clerk.com/docs)
+
+### Troubleshooting
+
+**Connection Issues**
+
+- Ensure backend is running on the correct port
+- Verify environment variables are set correctly
+- Check CORS configuration in `backend/src/app.ts`
+
+**Authentication Errors**
+
+- Verify Clerk keys are correct in environment variables
+- Check token expiration in Clerk dashboard
+
+**Database Connection**
+
+- Verify MongoDB URI is correct
+- Check database credentials
+- Ensure network access is allowed (MongoDB Atlas)
+
+## 📬 Connect with me
+
+<a href="https://www.linkedin.com/in/sergiy-antonyuk/" target="_blank">
+<img alt="Sergiy Antonyuk | LinkedIn" src="https://img.shields.io/badge/LinkedIn-0077B5.svg?&style=for-the-badge&logo=linkedin&logoColor=white" />
+</a>
+
+#### 🙏 Acknowledgements
+
+A heartfelt thank you to [Codesistency](https://www.youtube.com/@codesistency/featured) for his invaluable contributions
+
+**Made with ❤️ by the SxidSvit**
